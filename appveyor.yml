@@ -1,17 +1,18 @@
+---
 #---------------------------------#
 #      environment configuration  #
 #---------------------------------#
 version: 1.1.{build}.0
 install:
-    - git clone https://github.com/PowerShell/DscResource.Tests
+    - git clone -q --branch=HashtableCheck https://github.com/SSvilen/DscResource.Tests
 
     - ps: |
-        Import-Module "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
-        Invoke-AppveyorInstallTask
+          Import-Module "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
+          Invoke-AppveyorInstallTask
 
-        Install-WindowsFeature -Name ADCS-Cert-Authority, RSAT-ADCS
-        Restart-Computer -Force
-        Start-Sleep -s 10
+          Install-WindowsFeature -Name ADCS-Cert-Authority, RSAT-ADCS
+          Restart-Computer -Force
+          Start-Sleep -s 10
 #---------------------------------#
 #      build configuration        #
 #---------------------------------#
@@ -24,11 +25,11 @@ build: false
 
 test_script:
     - ps: |
-        Import-Module "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
-        Invoke-AppveyorTestScriptTask `
-            -ExcludeTag @() `
-            -CodeCoverage `
-            -CodeCovIo
+          Import-Module "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
+          Invoke-AppveyorTestScriptTask `
+              -ExcludeTag @() `
+              -CodeCoverage `
+              -CodeCovIo
 
 #---------------------------------#
 #      deployment configuration   #
@@ -37,8 +38,8 @@ test_script:
 # scripts to run before deployment
 deploy_script:
     - ps: |
-        Invoke-AppveyorAfterTestTask `
-            -Type 'Wiki' `
-            -ResourceModuleName 'ActiveDirectoryCSDsc'
+          Invoke-AppveyorAfterTestTask `
+              -Type 'Wiki' `
+              -ResourceModuleName 'ActiveDirectoryCSDsc'
 
-        Invoke-AppVeyorDeployTask
+          Invoke-AppVeyorDeployTask
